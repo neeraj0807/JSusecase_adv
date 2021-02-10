@@ -1,0 +1,30 @@
+{
+  "users": [
+    {
+      "firstName": "John",
+      "lastName": "decosta",
+      "sapId": "123",
+      "email": "john@yahoo.com",
+      "contactNumber": "1234567891",
+      "location": "Bangalore",
+      "gender": "Male",
+      "language": [
+        "English"
+      ],
+      "id": 1
+    },
+    {
+      "firstName": "Neeraj",
+      "lastName": "Agrawal",
+      "sapId": "51890804",
+      "email": "neeraj@gmail.com",
+      "contactNumber": "9981462999",
+      "location": "Mysour",
+      "gender": "Male",
+      "language": [
+        "Hindi"
+      ],
+      "id": 3
+    }
+  ]
+}
