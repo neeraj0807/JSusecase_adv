@@ -1,17 +1,20 @@
-import {MAIN_HEADING, USER_EDIT_FORM_TEXT, BACKEND_URL, USER_DELETE_CONFIRMATION_MESSAGE, USER_DELETE_MESSAGE, USER_ADD_FORM_URL, HOME_PAGE_URL, LOCATION_ARRAY} from './constants.js';
+import {MAIN_HEADING, USER_EDIT_FORM_TEXT, BACKEND_URL, USER_DELETE_CONFIRMATION_MESSAGE, USER_DELETE_MESSAGE, USER_ADD_FORM_URL, HOME_PAGE_URL, LOCATIONS, LANGUAGES} from './constants.js';
+import { pageHeadingStyle, inputFieldStyle, buttonStyle, radioButtonStyle, fontBold, formStyle, editButtonStyle, deleteButtonStyle } from './styles.js';
 
 //Create page heading
 export function createPageHeading() {
-    let heading = document.createElement('h1');
-    let headingText = document.createTextNode(`${MAIN_HEADING}`);
+    const heading = document.createElement('h1');
+    const headingText = document.createTextNode(`${MAIN_HEADING}`);
+    Object.assign(heading.style, pageHeadingStyle);
     body.appendChild(heading).appendChild(headingText);
 }
 
 //Create page sub heading
 export function createPageSubHeading(pageSubHeading){
-    let subHeading = document.createElement('h3');
-    subHeading.id = "headertag";
-    let subHeadingText = document.createTextNode(pageSubHeading);
+    const subHeading = document.createElement('h3');
+    subHeading.id = "subHeader";
+    const subHeadingText = document.createTextNode(pageSubHeading);
+    Object.assign(subHeading.style, pageHeadingStyle);
     body.appendChild(subHeading).appendChild(subHeadingText);
 }
 
@@ -33,28 +36,30 @@ export const userList = () => {
 
 //Create table to dispaly user data
 function tableCreate(data) {
-    let tbl = document.createElement('table');
-    tbl.style.width = '90%';
+    const tbl = document.createElement('table');
+    tbl.style.width = '100%';
     tbl.setAttribute('border', '1');
-    let tbdy = document.createElement('tbody');
-    let tr = document.createElement('tr');
-    let tr1 = document.createElement('tr');  
+    const tbdy = document.createElement('tbody');
+    const tr = document.createElement('tr');
+    const tr1 = document.createElement('tr');  
     //Heading
-    let th = document.createElement('th');
+    const th = document.createElement('th');
     th.appendChild(document.createTextNode("First Name"));
-    let th1 = document.createElement('th');
+    const th1 = document.createElement('th');
     th1.appendChild(document.createTextNode("Last Name"));
-    let th2 = document.createElement('th');
+    const th2 = document.createElement('th');
     th2.appendChild(document.createTextNode("SAP ID"));
-    let th3 = document.createElement('th');
+    const th3 = document.createElement('th');
     th3.appendChild(document.createTextNode("Email"));
-    let th4 = document.createElement('th');
+    const th4 = document.createElement('th');
     th4.appendChild(document.createTextNode("Contact Number"));
-    let th5 = document.createElement('th');
+    const th5 = document.createElement('th');
     th5.appendChild(document.createTextNode("Location"));
-    let th6 = document.createElement('th');
+    const th6 = document.createElement('th');
     th6.appendChild(document.createTextNode("Gender"));
-    let th7 = document.createElement('th');
+    const th8 = document.createElement('th');
+    th8.appendChild(document.createTextNode("Language"));
+    const th7 = document.createElement('th');
     th7.appendChild(document.createTextNode("Actions"));
 
     tr1.appendChild(th);
@@ -64,11 +69,12 @@ function tableCreate(data) {
     tr1.appendChild(th4);
     tr1.appendChild(th5);
     tr1.appendChild(th6);
+    tr1.appendChild(th8);
     tr1.appendChild(th7);
     tbdy.appendChild(tr1);
 
     for (let i = 0; i < data.length; i++) {
-        let tr = document.createElement('tr');
+        const tr = document.createElement('tr');
         //User data
         let td = document.createElement('td');
         td.appendChild(document.createTextNode(data[i].firstName));
@@ -85,15 +91,8 @@ function tableCreate(data) {
         let td6 = document.createElement('td');
         td6.appendChild(document.createTextNode(data[i].gender));
         let td7 = document.createElement('td');
-
-        //Delete user
-        let deleteButton = document.createElement("input"); 
-        deleteButton.setAttribute("type", "button"); 
-        deleteButton.setAttribute("value", "Delete");
-        deleteButton.setAttribute("id", data[i].id);
-        deleteButton.setAttribute("data-uid", data[i].id); 
-        deleteButton.addEventListener("click", handelDelete);
-        td7.appendChild(deleteButton);
+        let td8 = document.createElement('td');
+        td8.appendChild(document.createTextNode(data[i].language));
 
         //Update user
         let editButton = document.createElement("input"); 
@@ -102,7 +101,18 @@ function tableCreate(data) {
         editButton.setAttribute("id", data[i].id);
         editButton.setAttribute("data-uid", data[i].id); 
         editButton.addEventListener("click", handelEdit);
+        Object.assign(editButton.style, editButtonStyle);
         td7.appendChild(editButton);
+
+        //Delete user
+        let deleteButton = document.createElement("input"); 
+        deleteButton.setAttribute("type", "button"); 
+        deleteButton.setAttribute("value", "Delete");
+        deleteButton.setAttribute("id", data[i].id);
+        deleteButton.setAttribute("data-uid", data[i].id); 
+        deleteButton.addEventListener("click", handelDelete);
+        Object.assign(deleteButton.style, deleteButtonStyle);
+        td7.appendChild(deleteButton);
 
         tr.appendChild(td);
         tr.appendChild(td1);
@@ -111,6 +121,7 @@ function tableCreate(data) {
         tr.appendChild(td4);
         tr.appendChild(td5);
         tr.appendChild(td6);
+        tr.appendChild(td8);
         tr.appendChild(td7);
         
         tbdy.appendChild(tr);
@@ -121,7 +132,7 @@ function tableCreate(data) {
 
 //Function to handel delete user
 function handelDelete (){
-    let msg = confirm(`${USER_DELETE_CONFIRMATION_MESSAGE}`);
+    const msg = confirm(`${USER_DELETE_CONFIRMATION_MESSAGE}`);
     let uid = this.id;
     if (msg === true && uid != null) {
         fetch(`${BACKEND_URL}/users/${uid}`, {
@@ -147,74 +158,87 @@ function handelEdit (){
 }
 
 //Create user add form
-export function createForm() { 
-    let form = document.createElement("form"); 
+export function createForm() {
+    const form = document.createElement("form"); 
     form.setAttribute("method", "post"); 
     form.setAttribute("id", "myform_id"); 
+    Object.assign(form.style, formStyle);
 
     // Create a break line element 
-    let br = document.createElement("br");
+    const br = document.createElement("br");
+
+    let messagesDiv = document.createElement("div");
+    messagesDiv.setAttribute("id", "errorMessage");
+    messagesDiv.setAttribute("class", "errorMessage");
+    form.appendChild(messagesDiv); 
 
     // Create an input element for first name 
-    let firstNameInput = document.createElement("input"); 
+    const firstNameInput = document.createElement("input"); 
     firstNameInput.setAttribute("type", "text"); 
     firstNameInput.setAttribute("name", "firstName");
     firstNameInput.setAttribute("id", "firstName");
     firstNameInput.setAttribute("class", "formField");
     firstNameInput.setAttribute("value", "");
-    firstNameInput.setAttribute("placeholder", "First Name"); 
+    firstNameInput.setAttribute("placeholder", "First Name*");
+    Object.assign(firstNameInput.style, inputFieldStyle);
 
     // Create an input element for last name 
-    let lastNameInput = document.createElement("input"); 
+    const lastNameInput = document.createElement("input"); 
     lastNameInput.setAttribute("type", "text"); 
     lastNameInput.setAttribute("name", "lastName");
     lastNameInput.setAttribute("id", "lastName");
     lastNameInput.setAttribute("class", "formField");
     lastNameInput.setAttribute("value", "");
-    lastNameInput.setAttribute("placeholder", "Last Name"); 
+    lastNameInput.setAttribute("placeholder", "Last Name*");
+    Object.assign(lastNameInput.style, inputFieldStyle);
 
     // Create an input element for date of birth 
-    let sapIdInput = document.createElement("input"); 
+    const sapIdInput = document.createElement("input"); 
     sapIdInput.setAttribute("type", "text"); 
     sapIdInput.setAttribute("name", "sapId");
     sapIdInput.setAttribute("id", "sapId");
     sapIdInput.setAttribute("class", "formField");
     sapIdInput.setAttribute("value", "");
-    sapIdInput.setAttribute("placeholder", "SAP ID"); 
+    sapIdInput.setAttribute("placeholder", "SAP ID*");
+    Object.assign(sapIdInput.style, inputFieldStyle);
 
     // Create an input element for email
-    let emailIdInput = document.createElement("input"); 
+    const emailIdInput = document.createElement("input"); 
     emailIdInput.setAttribute("type", "text"); 
     emailIdInput.setAttribute("name", "email");
     emailIdInput.setAttribute("id", "email");
     emailIdInput.setAttribute("class", "formField");
     emailIdInput.setAttribute("value", "");
-    emailIdInput.setAttribute("placeholder", "E-Mail"); 
+    emailIdInput.setAttribute("placeholder", "E-Mail*");
+    Object.assign(emailIdInput.style, inputFieldStyle);
 
     // Create an input element for email
-    let contactNumberInput = document.createElement("input"); 
+    const contactNumberInput = document.createElement("input"); 
     contactNumberInput.setAttribute("type", "text"); 
     contactNumberInput.setAttribute("name", "contactNumber");
     contactNumberInput.setAttribute("id", "contactNumber");
     contactNumberInput.setAttribute("class", "formField");
     contactNumberInput.setAttribute("value", "");
-    contactNumberInput.setAttribute("placeholder", "Contact Number"); 
+    contactNumberInput.setAttribute("placeholder", "Contact Number*");
+    Object.assign(contactNumberInput.style, inputFieldStyle);
 
     // Create an select box for location
-    let select = document.createElement("select");
+    const select = document.createElement("select");
     select.name = "location";
     select.id = "location"
-   
-    for (const location of LOCATION_ARRAY) {
-      let option = document.createElement("option");
-      option.value = location;
-      option.text = location;
-      select.appendChild(option);
-    }
+    Object.assign(select.style, inputFieldStyle);
 
+    LOCATIONS.map((location)=>{
+        const option = document.createElement("option");
+        option.value = location;
+        option.text = location;
+        select.appendChild(option);
+    }) 
+    
     // Create radio button for gender
     let genderLabel = document.createElement("div");
     let genderInput = document.createTextNode('Gender');
+    Object.assign(genderLabel.style, fontBold);
 
     let genderMaleRadioButton = document.createElement("input");
     genderMaleRadioButton.setAttribute("type", "radio");
@@ -222,6 +246,7 @@ export function createForm() {
     genderMaleRadioButton.setAttribute("id", "Male");
     genderMaleRadioButton.setAttribute("class", "gender");
     genderMaleRadioButton.setAttribute("value", "Male");
+    Object.assign(genderMaleRadioButton.style, radioButtonStyle);
 
     let genderFemaleRadioButton = document.createElement("input");
     genderFemaleRadioButton.setAttribute("type", "radio");
@@ -229,11 +254,12 @@ export function createForm() {
     genderFemaleRadioButton.setAttribute("id", "Female");
     genderFemaleRadioButton.setAttribute("class", "gender");
     genderFemaleRadioButton.setAttribute("value", "Female");
+    Object.assign(genderFemaleRadioButton.style, radioButtonStyle);
 
     // Create checkbox for language
     let LanguageLabel = document.createElement("div");
     let LanguageText = document.createTextNode('Language');
-    let LanguageArray = ["English", "Hindi"];
+    Object.assign(LanguageLabel.style, fontBold);
 
     let userId = document.createElement("input"); 
     userId.setAttribute("type", "hidden"); 
@@ -242,11 +268,12 @@ export function createForm() {
     userId.setAttribute("value", "");
 
     // create a submit button 
-    let submitButton = document.createElement("input"); 
+    const submitButton = document.createElement("input"); 
     submitButton.setAttribute("type", "button"); 
-    submitButton.setAttribute("value", "Submit"); 
+    submitButton.setAttribute("value", "Submit");
     submitButton.addEventListener("click", handelSubmit);
-
+    Object.assign(submitButton.style, buttonStyle);
+    
     // Append the full name input 
     form.appendChild(firstNameInput);  
         
@@ -276,29 +303,31 @@ export function createForm() {
     // Append the gender
     form.appendChild(genderLabel).appendChild(genderInput);
     form.appendChild(genderMaleRadioButton);  
-    let spanGengerMale = document.createElement("span");
-    let labelGenderMale = document.createTextNode("Male");
+    const spanGengerMale = document.createElement("span");
+    const labelGenderMale = document.createTextNode("Male");
     form.appendChild(spanGengerMale).appendChild(labelGenderMale);
  
     form.appendChild(genderFemaleRadioButton);
-    let spanGengerFemale = document.createElement("span");
-    let labelGenderFemale = document.createTextNode("Female");
+    const spanGengerFemale = document.createElement("span");
+    const labelGenderFemale = document.createTextNode("Female");
     form.appendChild(spanGengerFemale).appendChild(labelGenderFemale);
     form.appendChild(br.cloneNode()); 
 
     // Append language
     form.appendChild(LanguageLabel).appendChild(LanguageText);  
-    for (const leng of LanguageArray) {
-        let languageName = document.createTextNode(leng);
+
+    LANGUAGES.map((language)=>{
+        const languageName = document.createTextNode(language);
         let checkBoxInput = document.createElement("input");
         checkBoxInput.type= "checkbox";
         checkBoxInput.name = "language[]";
-        checkBoxInput.id = leng;
+        checkBoxInput.id = language;
         checkBoxInput.setAttribute("class", "language");
-        checkBoxInput.value = leng;
+        checkBoxInput.value = language;
+        Object.assign(checkBoxInput.style, radioButtonStyle);
         form.appendChild(checkBoxInput);
         form.appendChild(languageName);
-      }
+    })
 
     form.appendChild(userId);
     form.appendChild(br.cloneNode()); 
@@ -308,23 +337,45 @@ export function createForm() {
     body.appendChild(form); 
 }
 
-
 //Function to handle submit user form
 function handelSubmit (e){
     e.preventDefault();
-    const data = {
-        "firstName": document.getElementById('firstName').value,
-        "lastName": document.getElementById('lastName').value,
-        "sapId": document.getElementById('sapId').value,
-        "email": document.getElementById('email').value,
-        "contactNumber": document.getElementById('contactNumber').value,
-        "location": document.getElementById('location').value,
-        "gender": document.querySelector('input[name = "gender"]:checked').value,
-        "language": languageCheckBox(),
+
+    const firstName  = document.getElementById('firstName').value.trim();
+    const lastName = document.getElementById('lastName').value.trim();
+    const sapId = document.getElementById('sapId').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const contactNumber = document.getElementById('contactNumber').value.trim();
+    const location = document.getElementById('location').value;
+    const gender = document.querySelector('input[name = "gender"]:checked').value;
+    const language = languageCheckBox();
+
+    let messages = [];
+    if(firstName == "" || firstName == null){
+        messages.push("First Name");
+    }
+    if(lastName == "" || lastName == null){
+        messages.push("Last Name");
+    }
+    if(sapId == "" || sapId == null){
+        messages.push("SAP Id");
+    }
+    if(email == "" || email == null){
+        messages.push("Email");
+    }
+    if(contactNumber == "" || contactNumber == null || isNaN(contactNumber)){
+        messages.push("Contact Number");
+    }
+    if(messages.length > 0){
+        errorMessage.innerText = `${messages.join(', ')} Required`;
+        return false;
     }
 
-    let hiddenUserId = document.getElementById('uid').value;
+    const data = { firstName, lastName, sapId, email, contactNumber, location, gender, language }
+
+    const hiddenUserId = document.getElementById('uid').value;
     let url = ""; let formMethod = "";
+
     if(hiddenUserId == ""){
         url = `${BACKEND_URL}/users`;
         formMethod = "POST";
@@ -353,8 +404,8 @@ function handelSubmit (e){
 }
 
 function languageCheckBox() {
-    let inputs = document.getElementsByName('language[]');
-    let lang = [];
+    const inputs = document.getElementsByName('language[]');
+    const lang = [];
     for(let i = 0, l = inputs.length; i < l; ++i) {
       if(inputs[i].checked) {
         lang.push(inputs[i].value);
@@ -365,9 +416,9 @@ function languageCheckBox() {
 
 //Get user by supplying user id
 export function getUserById(){
-    let url = new URL(window.location.href);
-    let search_params = url.searchParams; 
-    let uid = search_params.get('uid');
+    const url = new URL(window.location.href);
+    const search_params = url.searchParams; 
+    const uid = search_params.get('uid');
 
     //Fetch user data
     if(uid != null){
@@ -375,15 +426,20 @@ export function getUserById(){
         .then(
             (resp) => resp.json())
         .then(function(data) {
-            document.getElementById('firstName').value = data.firstName;
-            document.getElementById('lastName').value = data.lastName,
-            document.getElementById('sapId').value = data.sapId,
-            document.getElementById('email').value = data.email,
-            document.getElementById('contactNumber').value = data.contactNumber,
-            document.getElementById('location').value = data.location,
-            document.getElementById(data.gender).checked = true,
-            document.getElementById('uid').value = data.id
-            document.getElementById("headertag").innerHTML = USER_EDIT_FORM_TEXT;
+            const {firstName, lastName, sapId, email, contactNumber, location, gender, language, id} = data;
+
+            document.getElementById('firstName').value = firstName;
+            document.getElementById('lastName').value = lastName,
+            document.getElementById('sapId').value = sapId,
+            document.getElementById('email').value = email,
+            document.getElementById('contactNumber').value = contactNumber,
+            document.getElementById('location').value = location,
+            document.getElementById(gender).checked = true,
+            document.getElementById('uid').value = id
+            document.getElementById("subHeader").innerHTML = USER_EDIT_FORM_TEXT;
+            language.map((lang)=>{
+                document.getElementById(lang).checked = true;
+            })
         })
         .catch(function(error) {
             console.log(error);

@@ -9,4 +9,5 @@ export const HOME_PAGE_SUB_HEADING = "User List";
 export const MAIN_HEADING = "User Management";
 export const USER_ADD_FORM_TEXT = "Add User";
 export const USER_EDIT_FORM_TEXT = "Edit User";
-export const LOCATION_ARRAY = ["Bangalore", "Mysour", "Mumbai", "Noida", "Hyderabad"];
+export const LOCATIONS = ["Bangalore", "Mysour", "Mumbai", "Noida", "Hyderabad"];
+export const LANGUAGES = ["English", "Hindi"];
