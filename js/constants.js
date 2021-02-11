@@ -1,0 +1,12 @@
+export const BASE_URL = "http://localhost:5500";
+export const BACKEND_URL = "http://localhost:8090";
+export const USER_ADD_FORM_URL = "form.html";
+export const HOME_PAGE_URL = "index.html";
+export const HOME_PAGE_TEXT = "Home";
+export const USER_DELETE_CONFIRMATION_MESSAGE = "Do you really want to delete?";
+export const USER_DELETE_MESSAGE = "User Deleted Successfully!!";
+export const HOME_PAGE_SUB_HEADING = "User List";
+export const MAIN_HEADING = "User Management";
+export const USER_ADD_FORM_TEXT = "Add User";
+export const USER_EDIT_FORM_TEXT = "Edit User";
+export const LOCATION_ARRAY = ["Bangalore", "Mysour", "Mumbai", "Noida", "Hyderabad"];
