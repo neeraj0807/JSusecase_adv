@@ -4,7 +4,7 @@ import { pageHeadingStyle, inputFieldStyle, buttonStyle, radioButtonStyle, fontB
 //Create page heading
 export function createPageHeading() {
     const heading = document.createElement('h1');
-    const headingText = document.createTextNode(`${MAIN_HEADING}`);
+    const headingText = document.createTextNode(MAIN_HEADING);
     Object.assign(heading.style, pageHeadingStyle);
     body.appendChild(heading).appendChild(headingText);
 }
@@ -73,33 +73,35 @@ function tableCreate(data) {
     tr1.appendChild(th7);
     tbdy.appendChild(tr1);
 
-    for (let i = 0; i < data.length; i++) {
+    let dataLength = data.length;
+    for (let i = 0; i < dataLength; i++) {
         const tr = document.createElement('tr');
         //User data
+        const {firstName, lastName, sapId, email, contactNumber, location, gender, language, id} = data[i];
         let td = document.createElement('td');
-        td.appendChild(document.createTextNode(data[i].firstName));
+        td.appendChild(document.createTextNode(firstName  ?? ""));
         let td1 = document.createElement('td');
-        td1.appendChild(document.createTextNode(data[i].lastName));
+        td1.appendChild(document.createTextNode(lastName ?? ""));
         let td2 = document.createElement('td');
-        td2.appendChild(document.createTextNode(data[i].sapId));
+        td2.appendChild(document.createTextNode(sapId ?? ""));
         let td3 = document.createElement('td');
-        td3.appendChild(document.createTextNode(data[i].email));
+        td3.appendChild(document.createTextNode(email ?? ""));
         let td4 = document.createElement('td');
-        td4.appendChild(document.createTextNode(data[i].contactNumber));
+        td4.appendChild(document.createTextNode(contactNumber ?? ""));
         let td5 = document.createElement('td');
-        td5.appendChild(document.createTextNode(data[i].location));
+        td5.appendChild(document.createTextNode(location ?? ""));
         let td6 = document.createElement('td');
-        td6.appendChild(document.createTextNode(data[i].gender));
+        td6.appendChild(document.createTextNode(gender ?? ""));
         let td7 = document.createElement('td');
         let td8 = document.createElement('td');
-        td8.appendChild(document.createTextNode(data[i].language));
+        td8.appendChild(document.createTextNode(language ?? ""));
 
         //Update user
         let editButton = document.createElement("input"); 
         editButton.setAttribute("type", "button"); 
         editButton.setAttribute("value", "Edit");
-        editButton.setAttribute("id", data[i].id);
-        editButton.setAttribute("data-uid", data[i].id); 
+        editButton.setAttribute("id", id ?? 0);
+        editButton.setAttribute("data-uid", id ?? 0); 
         editButton.addEventListener("click", handelEdit);
         Object.assign(editButton.style, editButtonStyle);
         td7.appendChild(editButton);
@@ -108,8 +110,8 @@ function tableCreate(data) {
         let deleteButton = document.createElement("input"); 
         deleteButton.setAttribute("type", "button"); 
         deleteButton.setAttribute("value", "Delete");
-        deleteButton.setAttribute("id", data[i].id);
-        deleteButton.setAttribute("data-uid", data[i].id); 
+        deleteButton.setAttribute("id", id ?? 0);
+        deleteButton.setAttribute("data-uid", id ?? 0); 
         deleteButton.addEventListener("click", handelDelete);
         Object.assign(deleteButton.style, deleteButtonStyle);
         td7.appendChild(deleteButton);
@@ -133,7 +135,7 @@ function tableCreate(data) {
 //Function to handel delete user
 function handelDelete (){
     const msg = confirm(`${USER_DELETE_CONFIRMATION_MESSAGE}`);
-    let uid = this.id;
+    let uid = this.id ?? null;
     if (msg === true && uid != null) {
         fetch(`${BACKEND_URL}/users/${uid}`, {
             method: 'DELETE',
@@ -153,7 +155,7 @@ function handelDelete (){
 
 //Function to handel edit a user
 function handelEdit (){
-    let uid = this.id;
+    let uid = this.id ?? "";
     window.location.href=`${USER_ADD_FORM_URL}?uid=${uid}`;
 }
 
@@ -341,17 +343,17 @@ export function createForm() {
 function handelSubmit (e){
     e.preventDefault();
 
-    const firstName  = document.getElementById('firstName').value.trim();
-    const lastName = document.getElementById('lastName').value.trim();
-    const sapId = document.getElementById('sapId').value.trim();
-    const email = document.getElementById('email').value.trim();
-    const contactNumber = document.getElementById('contactNumber').value.trim();
-    const location = document.getElementById('location').value;
-    const gender = document.querySelector('input[name = "gender"]:checked').value;
-    const language = languageCheckBox();
+    const firstName  = document.getElementById('firstName').value.trim() ?? "";
+    const lastName = document.getElementById('lastName').value.trim() ?? "";
+    const sapId = document.getElementById('sapId').value.trim() ?? "";
+    const email = document.getElementById('email').value.trim() ?? "";
+    const contactNumber = document.getElementById('contactNumber').value.trim() ?? "";
+    const location = document.getElementById('location').value ?? "";
+    const gender = document.querySelector('input[name = "gender"]:checked').value ?? "";
+    const language = languageCheckBox() ?? [];
 
     let messages = [];
-    if(firstName == "" || firstName == null){
+    if(firstName === "" || firstName === null){
         messages.push("First Name");
     }
     if(lastName == "" || lastName == null){
@@ -368,14 +370,16 @@ function handelSubmit (e){
     }
     if(messages.length > 0){
         errorMessage.innerText = `${messages.join(', ')} Required`;
+        errorMessage.style.color = 'red';
         return false;
     }
 
     const data = { firstName, lastName, sapId, email, contactNumber, location, gender, language }
 
-    const hiddenUserId = document.getElementById('uid').value;
+    const hiddenUserId = document.getElementById('uid').value ?? "";
     let url = ""; let formMethod = "";
 
+    //Set url and method for add or edit user
     if(hiddenUserId == ""){
         url = `${BACKEND_URL}/users`;
         formMethod = "POST";
@@ -418,7 +422,7 @@ function languageCheckBox() {
 export function getUserById(){
     const url = new URL(window.location.href);
     const search_params = url.searchParams; 
-    const uid = search_params.get('uid');
+    const uid = search_params.get('uid') ?? null;
 
     //Fetch user data
     if(uid != null){
@@ -428,14 +432,14 @@ export function getUserById(){
         .then(function(data) {
             const {firstName, lastName, sapId, email, contactNumber, location, gender, language, id} = data;
 
-            document.getElementById('firstName').value = firstName;
-            document.getElementById('lastName').value = lastName,
-            document.getElementById('sapId').value = sapId,
-            document.getElementById('email').value = email,
-            document.getElementById('contactNumber').value = contactNumber,
-            document.getElementById('location').value = location,
-            document.getElementById(gender).checked = true,
-            document.getElementById('uid').value = id
+            document.getElementById('firstName').value = firstName ?? "";
+            document.getElementById('lastName').value = lastName ?? "",
+            document.getElementById('sapId').value = sapId ?? "",
+            document.getElementById('email').value = email ?? "",
+            document.getElementById('contactNumber').value = contactNumber ?? "",
+            document.getElementById('location').value = location ?? "",
+            document.getElementById(gender).checked = true ?? "",
+            document.getElementById('uid').value = id ?? ""
             document.getElementById("subHeader").innerHTML = USER_EDIT_FORM_TEXT;
             language.map((lang)=>{
                 document.getElementById(lang).checked = true;
@@ -443,7 +447,7 @@ export function getUserById(){
         })
         .catch(function(error) {
             console.log(error);
-            result = error;
+            let result = error;
         });
     }
 }
